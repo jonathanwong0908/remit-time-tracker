@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "../../styles/globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/core/theme-provider";
-
-const inter = Inter({ subsets: ["latin"] });
+import Navbar from "@/components/core/navbar";
+import SideNav from "@/components/core/side-nav";
+import { inter, poppins } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,11 +26,11 @@ export default function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={cn(inter.className)}
+      className={cn(poppins.className)}
     >
       <body
         className={cn(
-          "bg-surface-container font-body relative overflow-x-clip font-light transition-colors duration-300",
+          "font-body relative overflow-x-clip bg-surface-container font-light transition-colors duration-300",
         )}
       >
         <ThemeProvider
@@ -39,7 +39,10 @@ export default function RootLayout({
           enableSystem
           themes={["light", "dark"]}
         >
-          {children}
+          <div className="relative flex min-h-screen">
+            <SideNav />
+            <div className="p-6">{children}</div>
+          </div>
         </ThemeProvider>
       </body>
     </html>

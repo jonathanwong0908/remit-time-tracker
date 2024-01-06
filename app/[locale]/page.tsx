@@ -1,15 +1,10 @@
-import { Button } from "@/components/ui/button";
+import { LocaleString } from "@/config/locale";
 import { useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
-import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import ThemeSwitcher from "@/components/core/theme-switcher";
-import LanguageSwitcher from "@/components/core/locale-switcher";
+import React from "react";
 
 type HomePageProps = {
   params: {
-    locale: "en" | "jp";
+    locale: LocaleString;
   };
 };
 
@@ -17,10 +12,8 @@ export default function Home({ params: { locale } }: HomePageProps) {
   const t = useTranslations("index");
 
   return (
-    <main className="">
+    <main className="grid place-items-center">
       <h1>{t("title")}</h1>
-      <ThemeSwitcher />
-      <LanguageSwitcher locale={locale} />
     </main>
   );
 }

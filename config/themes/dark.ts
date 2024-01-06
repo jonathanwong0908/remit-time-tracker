@@ -10,17 +10,11 @@ export default {
       surface: {
         container: {
           low: colors.black,
-          DEFAULT: colors.neutral[950],
-          high: colors.neutral[900],
-          higher: colors.neutral[800],
+          DEFAULT: colors.slate[950],
+          high: colors.slate[900],
+          higher: colors.slate[800],
           highest: colors.neutral[50],
         },
-      },
-      campus: {
-        DEFAULT: colors.neutral[50],
-        high: colors.neutral[100],
-        higher: colors.neutral[200],
-        highest: colors.neutral[950],
       },
     },
     textColor: {

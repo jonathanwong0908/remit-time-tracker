@@ -16,12 +16,6 @@ export default {
           highest: colors.neutral[900],
         },
       },
-      campus: {
-        DEFAULT: colors.neutral[900],
-        high: colors.neutral[800],
-        higher: colors.neutral[700],
-        highest: colors.neutral[50],
-      },
     },
     textColor: {
       display: {
