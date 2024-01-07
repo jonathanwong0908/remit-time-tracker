@@ -1,5 +1,21 @@
 {
   "index": {
     "title": "Hello world!"
+  },
+  "nav": {
+    "analytics": "Analytics",
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "tools": "Tools",
+    "tracker": "Tracker",
+    "manage": "Manage",
+    "categories": "Categories",
+    "settings": "Settings",
+    "add-entry": "Add entry"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome to your dashboard",
+    "empty": "You have no data yet. Start tracking your time to see your dashboard."
   }
 }

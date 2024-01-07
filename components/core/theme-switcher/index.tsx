@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Moon, Sun } from "lucide-react";
 
 const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
@@ -23,8 +24,8 @@ const ThemeSwitcher = () => {
   }
 
   return (
-    <Button className="" onClick={handleClick}>
-      Change Theme
+    <Button className="" variant="ghost" size="icon" onClick={handleClick}>
+      {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
     </Button>
   );
 };

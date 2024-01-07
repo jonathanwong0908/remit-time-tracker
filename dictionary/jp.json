@@ -1,5 +1,21 @@
 {
   "index": {
     "title": "こんにちは、世界！"
+  },
+  "nav": {
+    "analytics": "分析",
+    "dashboard": "ダッシュボード",
+    "calendar": "カレンダー",
+    "tools": "ツール",
+    "tracker": "トラッカー",
+    "manage": "管理",
+    "categories": "カテゴリ",
+    "settings": "設定",
+    "add-entry": "新規エントリー"
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "subtitle": "あなたの進捗を見てください",
+    "empty": "まだ何もありません。"
   }
 }

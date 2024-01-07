@@ -1,49 +1,98 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   CalendarDays,
   ChevronLeft,
+  ChevronRight,
   Cuboid,
   LayoutDashboard,
+  Plus,
   Settings,
   Timer,
 } from "lucide-react";
 import React, { useState } from "react";
+import ThemeSwitcher from "../theme-switcher";
+import { useTranslations } from "next-intl";
+import { AnimatePresence, motion } from "framer-motion";
+import AddEntryModalTrigger from "../add-entry-modal";
 
 const SideNav = () => {
   const [opened, setOpened] = useState<boolean>(true);
+  const [selectedTab, setSelectedTab] = useState<string>("dashboard");
+
+  const t = useTranslations("nav");
 
   return (
-    <aside className="sticky top-0 hidden h-full min-h-screen w-[270px] border-r lg:block">
+    <motion.aside
+      initial={false}
+      animate={{ width: opened ? 270 : 70 }}
+      className={cn(
+        "sticky top-0 hidden h-full min-h-screen border-r lg:block",
+        !opened && "flex justify-center",
+      )}
+    >
       <div className="flex min-h-screen flex-col justify-between">
         <div className="">
-          <div className="flex items-center justify-between border-b p-6">
-            <div className="w-full  text-2xl">Remit.</div>
+          <div
+            className={cn(
+              "flex items-center justify-between border-b p-6",
+              !opened && "p-4",
+            )}
+          >
+            {opened && <div className="w-full  text-2xl">Remit.</div>}
             <Button
               variant="ghost"
               size="icon"
-              // onClick={() => setOpened((prev) => !prev)}
-              className="h-8 w-8"
+              onClick={() => setOpened((prev) => !prev)}
+              className="h-9 w-9 p-0"
             >
-              <ChevronLeft size={16} />
+              {opened ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
             </Button>
           </div>
 
-          <div className="grid gap-14 p-6">
+          <div className={cn("px-6 pt-6", !opened && "px-4 pt-4")}>
+            <AddEntryModalTrigger>
+              <div
+                className={cn(
+                  "grid h-9 w-full min-w-9 place-items-center rounded bg-primary text-sm text-display-inverted hover:shadow-md",
+                )}
+              >
+                <motion.span>
+                  {opened ? t("add-entry") : <Plus size={20} />}
+                </motion.span>
+              </div>
+            </AddEntryModalTrigger>
+          </div>
+
+          <div className={cn("grid gap-10 p-6", !opened && "p-4")}>
             {sideNavItems.map((navItem) => (
-              <div key={navItem?.name} className="grid gap-3 text-sm">
-                <span className="text-xs text-muted">{navItem?.title}</span>
-                <div className="grid gap-2">
-                  {navItem?.items.map((item) => (
+              <div key={navItem?.name} className="grid gap-2 text-sm">
+                {opened && (
+                  <motion.span
+                    initial={false}
+                    className="px-2 text-xs text-muted"
+                  >
+                    {t(navItem?.name)}
+                  </motion.span>
+                )}
+                <div className="grid gap-1">
+                  {navItem?.items.map((item, index) => (
                     <div
                       key={item?.name}
-                      className="flex items-center gap-2 rounded border"
+                      onClick={() => setSelectedTab(item?.name)}
+                      className={cn(
+                        "text-nav flex cursor-pointer items-center gap-3 rounded px-2 py-2",
+                        item?.name === selectedTab &&
+                          "cursor-default bg-surface-container-high text-display",
+                        !opened && "h-9",
+                      )}
                     >
-                      <div className="grid h-8 w-8 place-items-center">
+                      <div className="flex items-center">
                         <item.Icon />
                       </div>
-                      <span>{item?.title}</span>
+                      {opened && <motion.span>{t(item?.name)}</motion.span>}
                     </div>
                   ))}
                 </div>
@@ -52,9 +101,13 @@ const SideNav = () => {
           </div>
         </div>
 
-        <div className="border-t p-6">bottom</div>
+        <div className={cn("border-t px-6 py-4", !opened && "px-4")}>
+          <div className="flex justify-between">
+            <ThemeSwitcher />
+          </div>
+        </div>
       </div>
-    </aside>
+    </motion.aside>
   );
 };
 

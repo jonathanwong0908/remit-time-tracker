@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/core/theme-provider";
 import Navbar from "@/components/core/navbar";
 import SideNav from "@/components/core/side-nav";
 import { inter, poppins } from "@/lib/fonts";
+import { NextIntlClientProvider, useMessages } from "next-intl";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,6 +23,8 @@ export default function RootLayout({
   children,
   params: { locale },
 }: RootLayoutProps) {
+  const messages = useMessages();
+
   return (
     <html
       lang={locale}
@@ -39,10 +42,12 @@ export default function RootLayout({
           enableSystem
           themes={["light", "dark"]}
         >
-          <div className="relative flex min-h-screen">
-            <SideNav />
-            <div className="p-6">{children}</div>
-          </div>
+          <NextIntlClientProvider messages={messages}>
+            <div className="relative flex min-h-screen">
+              <SideNav />
+              <div className="p-6">{children}</div>
+            </div>
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>

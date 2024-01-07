@@ -26,6 +26,7 @@ export default {
       title: colors.neutral[950],
       body: colors.neutral[900],
       label: colors.neutral[800],
+      nav: colors.neutral[500],
       muted: colors.neutral[400],
     },
     borderColor: {
