@@ -25,11 +25,9 @@ const SideNav = () => {
   const t = useTranslations("nav");
 
   return (
-    <motion.aside
-      initial={false}
-      animate={{ width: opened ? 270 : 70 }}
+    <aside
       className={cn(
-        "sticky top-0 hidden h-full min-h-screen border-r lg:block",
+        "sticky top-0 hidden h-full min-h-screen w-[240px] border-r lg:block",
         !opened && "flex justify-center",
       )}
     >
@@ -42,14 +40,14 @@ const SideNav = () => {
             )}
           >
             {opened && <div className="w-full  text-2xl">Remit.</div>}
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               onClick={() => setOpened((prev) => !prev)}
               className="h-9 w-9 p-0"
             >
               {opened ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-            </Button>
+            </Button> */}
           </div>
 
           <div className={cn("px-6 pt-6", !opened && "px-4 pt-4")}>
@@ -59,9 +57,7 @@ const SideNav = () => {
                   "grid h-9 w-full min-w-9 place-items-center rounded bg-primary text-sm text-display-inverted hover:shadow-md",
                 )}
               >
-                <motion.span>
-                  {opened ? t("add-entry") : <Plus size={20} />}
-                </motion.span>
+                <span>{opened ? t("add-entry") : <Plus size={20} />}</span>
               </div>
             </AddEntryModalTrigger>
           </div>
@@ -70,12 +66,9 @@ const SideNav = () => {
             {sideNavItems.map((navItem) => (
               <div key={navItem?.name} className="grid gap-2 text-sm">
                 {opened && (
-                  <motion.span
-                    initial={false}
-                    className="px-2 text-xs text-muted"
-                  >
+                  <span className="px-2 text-xs text-muted">
                     {t(navItem?.name)}
-                  </motion.span>
+                  </span>
                 )}
                 <div className="grid gap-1">
                   {navItem?.items.map((item, index) => (
@@ -92,7 +85,7 @@ const SideNav = () => {
                       <div className="flex items-center">
                         <item.Icon />
                       </div>
-                      {opened && <motion.span>{t(item?.name)}</motion.span>}
+                      {opened && <span>{t(item?.name)}</span>}
                     </div>
                   ))}
                 </div>
@@ -107,7 +100,7 @@ const SideNav = () => {
           </div>
         </div>
       </div>
-    </motion.aside>
+    </aside>
   );
 };
 
