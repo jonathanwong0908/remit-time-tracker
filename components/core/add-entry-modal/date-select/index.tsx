@@ -27,7 +27,7 @@ const DateSelect = () => {
     return () => {
       window.removeEventListener("resize", updateWidth);
     };
-  }, [updateWidth]);
+  }, []);
 
   return (
     <Popover>

@@ -33,7 +33,7 @@ const CategorySelect = () => {
     return () => {
       window.removeEventListener("resize", updateWidth);
     };
-  }, [updateWidth]);
+  }, []);
 
   return (
     <Popover onOpenChange={(opened) => handleOpenChange(opened)}>
