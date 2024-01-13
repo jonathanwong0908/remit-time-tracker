@@ -18,7 +18,12 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
-const AddEntryCalendar = () => {
+type AddEntryCalendarProps = {
+  setDate: (date: Date) => void;
+  date: Date;
+};
+
+const AddEntryCalendar = ({ setDate, date }: AddEntryCalendarProps) => {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
@@ -39,6 +44,11 @@ const AddEntryCalendar = () => {
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   };
 
+  const handleButtonClick = (day: Date) => {
+    setDate(day);
+    setSelectedDay(day);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -51,9 +61,17 @@ const AddEntryCalendar = () => {
           <span className="sr-only">Previous month</span>
           <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         </Button>
-        <h4 className="text-sm font-semibold">
-          {format(firstDayCurrentMonth, "MMMM yyyy")}
-        </h4>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.h4
+            key={format(firstDayCurrentMonth, "MMMM yyyy")}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="text-sm font-semibold"
+          >
+            {format(firstDayCurrentMonth, "MMMM yyyy")}
+          </motion.h4>
+        </AnimatePresence>
         <Button variant="ghost" size="icon" className="" onClick={nextMonth}>
           <span className="sr-only">Next month</span>
           <ChevronRight className="h-5 w-5" aria-hidden="true" />
@@ -70,9 +88,9 @@ const AddEntryCalendar = () => {
       </div>
       <div className="mt-2 grid grid-cols-7 text-sm">
         <AnimatePresence mode="wait" initial={false}>
-          {days.map((day, dayIdx) => (
+          {days?.map((day, dayIdx) => (
             <motion.div
-              key={day.toString()}
+              key={day?.toString()}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -83,7 +101,7 @@ const AddEntryCalendar = () => {
             >
               <button
                 type="button"
-                onClick={() => setSelectedDay(day)}
+                onClick={() => handleButtonClick(day)}
                 className={cn(
                   isEqual(day, selectedDay) && "text-display-inverted",
                   !isEqual(day, selectedDay) && isToday(day) && "",

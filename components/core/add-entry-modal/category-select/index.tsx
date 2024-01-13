@@ -49,7 +49,7 @@ const CategorySelect = () => {
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className={cn("rounded bg-surface-container p-3")}
+        className={cn("rounded bg-surface-container p-3 py-4")}
         align="start"
         sideOffset={10}
         style={{ width: `${popoverWidth}px` }}
