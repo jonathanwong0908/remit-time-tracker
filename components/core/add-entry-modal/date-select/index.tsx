@@ -1,4 +1,3 @@
-import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -7,6 +6,7 @@ import {
 import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import AddEntryCalendar from "../calendar";
 
 const DateSelect = () => {
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -36,24 +36,19 @@ const DateSelect = () => {
         className="w-full overflow-hidden rounded border ring-0"
       >
         <div className="flex w-full items-center justify-between px-3 py-2 transition hover:bg-surface-container-high">
-          <span className="text-sm text-muted">Pick a sub-category</span>
+          <span className="text-sm text-muted">Select start date</span>
           <span>
             <CalendarDays size={14} className="text-muted" />
           </span>
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className={cn("rounded bg-surface-container p-3")}
+        className={cn("rounded bg-surface-container p-4")}
         align="start"
         sideOffset={10}
         style={{ width: `${popoverWidth}px` }}
       >
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-md"
-        />
+        <AddEntryCalendar />
       </PopoverContent>
     </Popover>
   );
