@@ -30,8 +30,8 @@ export default {
       muted: colors.neutral[500],
     },
     borderColor: {
-      DEFAULT: colors.neutral[800],
-      inverted: colors.neutral[300],
+      DEFAULT: colors.slate[800],
+      inverted: colors.slate[300],
     },
   },
 };

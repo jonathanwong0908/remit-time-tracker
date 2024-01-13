@@ -17,5 +17,8 @@
     "title": "Dashboard",
     "subtitle": "Welcome to your dashboard",
     "empty": "You have no data yet. Start tracking your time to see your dashboard."
+  },
+  "add-new": {
+    "title": "Add new entry"
   }
 }
