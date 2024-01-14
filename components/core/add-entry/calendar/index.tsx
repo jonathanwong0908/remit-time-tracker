@@ -17,13 +17,16 @@ import {
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { UseFormSetValue, UseFormWatch } from "react-hook-form";
+import * as z from "zod";
+import { addEntryFormSchema } from "..";
 
 type AddEntryCalendarProps = {
-  setDate: (date: Date) => void;
-  date: Date;
+  setValue: UseFormSetValue<z.infer<typeof addEntryFormSchema>>;
+  watch: UseFormWatch<z.infer<typeof addEntryFormSchema>>;
 };
 
-const AddEntryCalendar = ({ setDate, date }: AddEntryCalendarProps) => {
+const AddEntryCalendar = ({ setValue, watch }: AddEntryCalendarProps) => {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
@@ -45,7 +48,7 @@ const AddEntryCalendar = ({ setDate, date }: AddEntryCalendarProps) => {
   };
 
   const handleButtonClick = (day: Date) => {
-    setDate(day);
+    setValue("date", day);
     setSelectedDay(day);
   };
 

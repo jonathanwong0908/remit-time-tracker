@@ -18,10 +18,13 @@ type AddEntryTimeInputProps = {
 };
 
 const AddEntryTimeInput = ({ form }: AddEntryTimeInputProps) => {
+  const [startTime, setStartTime] = React.useState<Date>(new Date());
+  const [endTime, setEndTime] = React.useState<Date>(new Date());
+
   return (
     <div className="flex gap-4">
-      <div className="flex flex-col items-start gap-3">
-        <div className="flex w-full items-center justify-between gap-2">
+      <div className="flex flex-col gap-3">
+        <div className="flex w-full items-start justify-between gap-2">
           <FormField
             control={form?.control}
             name="startTime"
@@ -33,7 +36,10 @@ const AddEntryTimeInput = ({ form }: AddEntryTimeInputProps) => {
                     <span className="pr-1.5 ">
                       <Clock3 size={14} className="text-muted" />
                     </span>
-                    <Input className="w-full min-w-0 border-none p-0 shadow-none" />
+                    <Input
+                      className="w-full min-w-0 border-none p-0 shadow-none"
+                      {...field}
+                    />
                     <AmPmToggle date={new Date()} />
                   </div>
                 </FormControl>
@@ -53,7 +59,10 @@ const AddEntryTimeInput = ({ form }: AddEntryTimeInputProps) => {
                     <span className="pr-1.5 ">
                       <Clock3 size={14} className="text-muted" />
                     </span>
-                    <Input className="w-full min-w-0 border-none p-0 shadow-none" />
+                    <Input
+                      className="w-full min-w-0 border-none p-0 shadow-none"
+                      {...field}
+                    />
                     <AmPmToggle date={new Date()} />
                   </div>
                 </FormControl>
@@ -90,9 +99,9 @@ const AmPmToggle = ({ date }: AmPmToggleProps) => {
   const isAm = date.getHours() < 12;
 
   return (
-    <div className="flex gap-1 pl-1.5 text-xs">
-      <span className={cn("", !isAm && "text-muted")}>AM</span>
-      <span className={cn("", isAm && "text-muted")}>PM</span>
+    <div className="flex gap-1 pl-1.5 text-xs text-muted">
+      <span className={cn("", isAm && "border-b text-display")}>AM</span>
+      <span className={cn("", !isAm && "border-b text-display")}>PM</span>
     </div>
   );
 };

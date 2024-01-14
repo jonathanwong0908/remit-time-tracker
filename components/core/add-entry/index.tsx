@@ -4,7 +4,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslations } from "next-intl";
 import React from "react";
@@ -23,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 
 type AddEntryModalTriggerProps = {
   children: React.ReactNode;
@@ -47,7 +47,9 @@ const AddEntryModalTrigger = ({
 
   const form = useForm<z.infer<typeof addEntryFormSchema>>({
     resolver: zodResolver(addEntryFormSchema),
-    defaultValues: {},
+    defaultValues: {
+      date: new Date(),
+    },
   });
 
   const onSubmit = (data: z.infer<typeof addEntryFormSchema>) => {
@@ -75,7 +77,10 @@ const AddEntryModalTrigger = ({
                     <FormItem>
                       <FormLabel>Date</FormLabel>
                       <FormControl>
-                        <DateSelect />
+                        <DateSelect
+                          watch={form?.watch}
+                          setValue={form?.setValue}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -132,6 +137,19 @@ const AddEntryModalTrigger = ({
                   )}
                 />
               </div>
+            </div>
+            <div className="flex gap-8">
+              <Button
+                type="submit"
+                size="sm"
+                className="w-1/2 text-sm"
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" size="sm" className="w-1/2 text-sm">
+                Add
+              </Button>
             </div>
           </form>
         </Form>
