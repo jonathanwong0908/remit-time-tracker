@@ -64,9 +64,9 @@ const AddEntryCalendar = ({ setDate, date }: AddEntryCalendarProps) => {
         <AnimatePresence mode="wait" initial={false}>
           <motion.h4
             key={format(firstDayCurrentMonth, "MMMM yyyy")}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="text-sm font-semibold"
           >
             {format(firstDayCurrentMonth, "MMMM yyyy")}

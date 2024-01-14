@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -49,16 +49,19 @@ const CategorySelect = () => {
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className={cn("rounded bg-surface-container p-3 py-4")}
+        className={cn("rounded bg-surface-container p-0")}
         align="start"
         sideOffset={10}
         style={{ width: `${popoverWidth}px` }}
       >
-        <Input
-          className="rounded-sm py-2 text-sm"
-          placeholder="Search category"
-        />
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="flex items-center gap-4 border-b">
+          <Search size={18} className="ml-4 text-muted" />
+          <Input
+            className="rounded-none border-none px-0 py-3 text-sm shadow-none"
+            placeholder="Search category"
+          />
+        </div>
+        <div className="my-2 flex flex-wrap gap-4 p-4">
           {categories.map((category, index) => (
             <CategoryButton
               category={category}

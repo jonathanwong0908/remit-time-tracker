@@ -1,11 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   CalendarDays,
-  ChevronLeft,
-  ChevronRight,
   Cuboid,
   LayoutDashboard,
   Plus,
@@ -15,8 +12,7 @@ import {
 import React, { useState } from "react";
 import ThemeSwitcher from "../theme-switcher";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
-import AddEntryModalTrigger from "../add-entry-modal";
+import AddEntryModalTrigger from "../add-entry";
 
 const SideNav = () => {
   const [opened, setOpened] = useState<boolean>(true);
