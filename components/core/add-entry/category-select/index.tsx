@@ -9,8 +9,15 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import CategoryButton from "../category-button";
+import { UseFormSetValue } from "react-hook-form";
+import { addEntryFormSchema } from "..";
+import * as z from "zod";
 
-const CategorySelect = () => {
+type CategorySelectProps = {
+  setValue: UseFormSetValue<z.infer<typeof addEntryFormSchema>>;
+};
+
+const CategorySelect = ({ setValue }: CategorySelectProps) => {
   const [popoverOpened, setPopoverOpened] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [popoverWidth, setPopoverWidth] = useState<number>(0);
