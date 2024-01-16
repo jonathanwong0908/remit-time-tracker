@@ -3,6 +3,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
+import { addHours, format } from "date-fns";
 
 export const addEntryFormSchema = z.object({
   description: z.string().optional(),
@@ -27,6 +28,9 @@ const AddEntryFormProvider = ({
     resolver: zodResolver(addEntryFormSchema),
     defaultValues: {
       date: new Date(),
+      startTime: format(new Date(), "hh:mm"),
+      endTime: format(addHours(new Date(), 1), "hh:mm"),
+      timeSpent: "1:00",
     },
   });
 

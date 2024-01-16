@@ -7,12 +7,10 @@ import TimeSpentInput from "./time-spent";
 const AddEntryTimeInput = () => {
   return (
     <div className="flex gap-4">
-      <div className="flex flex-col gap-3">
-        <div className="flex w-full items-start justify-between gap-2">
-          <StartTimeInput />
+      <div className="flex w-full items-start justify-between gap-4">
+        <StartTimeInput />
 
-          <EndTimeInput />
-        </div>
+        <EndTimeInput />
       </div>
 
       <TimeSpentInput />
@@ -23,16 +21,18 @@ const AddEntryTimeInput = () => {
 export default AddEntryTimeInput;
 
 type AmPmToggleProps = {
-  date: Date;
+  value: "am" | "pm" | null;
 };
 
-export const AmPmToggle = ({ date }: AmPmToggleProps) => {
-  const isAm = date.getHours() < 12;
-
+export const AmPmToggle = ({ value }: AmPmToggleProps) => {
   return (
-    <div className="flex gap-1 pl-1.5 text-xs text-muted">
-      <span className={cn("", isAm && "border-b text-display")}>AM</span>
-      <span className={cn("", !isAm && "border-b text-display")}>PM</span>
+    <div className="flex gap-1 pl-2 text-xs text-muted">
+      <span className={cn("", value === "am" && "border-b text-display")}>
+        AM
+      </span>
+      <span className={cn("", value === "pm" && "border-b text-display")}>
+        PM
+      </span>
     </div>
   );
 };
