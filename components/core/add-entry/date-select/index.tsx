@@ -7,22 +7,19 @@ import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import AddEntryCalendar from "../calendar";
-import { UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { UseFormSetValue, UseFormWatch, useFormContext } from "react-hook-form";
 import * as z from "zod";
-import { addEntryFormSchema } from "..";
+import { addEntryFormSchema } from "../form-provider";
 
-type DateSelectProps = {
-  watch: UseFormWatch<z.infer<typeof addEntryFormSchema>>;
-  setValue: UseFormSetValue<z.infer<typeof addEntryFormSchema>>;
-};
-
-const DateSelect = ({ watch, setValue }: DateSelectProps) => {
+const DateSelect = () => {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const [popoverWidth, setPopoverWidth] = useState<number>(0);
   const [popoverOpened, setPopoverOpened] = useState<boolean>(false);
 
-  const selectedDate = watch("date");
+  const form = useFormContext<z.infer<typeof addEntryFormSchema>>();
+
+  const selectedDate = form?.watch("date");
 
   const updateWidth = () => {
     if (triggerRef?.current) {
@@ -97,7 +94,7 @@ const DateSelect = ({ watch, setValue }: DateSelectProps) => {
         sideOffset={10}
         style={{ width: `${popoverWidth}px` }}
       >
-        <AddEntryCalendar watch={watch} setValue={setValue} />
+        <AddEntryCalendar />
       </PopoverContent>
     </Popover>
   );

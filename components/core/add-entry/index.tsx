@@ -11,8 +11,7 @@ import CategorySelect from "./category-select";
 import SubCategorySelect from "./sub-category-select";
 import DateSelect from "./date-select";
 import AddEntryTimeInput from "./time-input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import * as z from "zod";
 import {
   Form,
@@ -23,21 +22,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import AddEntryFormProvider, { addEntryFormSchema } from "./form-provider";
 
 type AddEntryModalTriggerProps = {
   children: React.ReactNode;
   className?: string;
 };
-
-export const addEntryFormSchema = z.object({
-  description: z.string().optional(),
-  category: z.string(),
-  subCategory: z.string(),
-  date: z.date(),
-  startTime: z.string(),
-  endTime: z.string(),
-  timeSpent: z.string(),
-});
 
 const AddEntryModalTrigger = ({
   children,
@@ -45,114 +35,98 @@ const AddEntryModalTrigger = ({
 }: AddEntryModalTriggerProps) => {
   const t = useTranslations("add-new");
 
-  const form = useForm<z.infer<typeof addEntryFormSchema>>({
-    resolver: zodResolver(addEntryFormSchema),
-    defaultValues: {
-      date: new Date(),
-    },
-  });
-
-  const onSubmit = (data: z.infer<typeof addEntryFormSchema>) => {
-    console.log(data);
-  };
+  const form = useFormContext<z.infer<typeof addEntryFormSchema>>();
   // fix modal width
   return (
     <Dialog>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent className="rounded-lg">
         <DialogTitle>{t("title")}</DialogTitle>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="mt-6 space-y-8"
-          >
-            <div className="space-y-4">
-              <div className="space-y-8">
-                <AddEntryTimeInput form={form} />
+        {/* wrap the form inside this and make another component that uses the useFormContextHook */}
+        <AddEntryFormProvider className="mt-6 space-y-8">
+          <div className="space-y-4">
+            <div className="space-y-8">
+              <AddEntryTimeInput />
 
-                <FormField
-                  control={form?.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Date</FormLabel>
-                      <FormControl>
-                        <DateSelect
-                          watch={form?.watch}
-                          setValue={form?.setValue}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form?.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <FormControl>
+                      <DateSelect />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+          </div>
 
-            <div className="space-y-4">
-              <div className="space-y-8">
-                <FormField
-                  control={form?.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="What did you do? (optional)"
-                          className="h-24 resize-none text-sm font-normal shadow-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <div className="space-y-4">
+            <div className="space-y-8">
+              <FormField
+                control={form?.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="What did you do? (optional)"
+                        className="h-24 resize-none text-sm font-normal shadow-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form?.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <CategorySelect setValue={form?.setValue} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form?.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <CategorySelect />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form?.control}
-                  name="subCategory"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Sub-category</FormLabel>
-                      <FormControl>
-                        <SubCategorySelect />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form?.control}
+                name="subCategory"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sub-category</FormLabel>
+                    <FormControl>
+                      <SubCategorySelect />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-            <div className="flex gap-8">
-              <Button
-                type="submit"
-                size="sm"
-                className="w-1/2 text-sm"
-                variant="outline"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" size="sm" className="w-1/2 text-sm">
-                Add
-              </Button>
-            </div>
-          </form>
-        </Form>
+          </div>
+          <div className="flex gap-8">
+            <Button
+              type="submit"
+              size="sm"
+              className="w-1/2 text-sm"
+              variant="outline"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" size="sm" className="w-1/2 text-sm">
+              Add
+            </Button>
+          </div>
+        </AddEntryFormProvider>
       </DialogContent>
     </Dialog>
   );

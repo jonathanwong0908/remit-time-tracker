@@ -9,18 +9,16 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import CategoryButton from "../category-button";
-import { UseFormSetValue } from "react-hook-form";
-import { addEntryFormSchema } from "..";
+import { useFormContext } from "react-hook-form";
 import * as z from "zod";
+import { addEntryFormSchema } from "../form-provider";
 
-type CategorySelectProps = {
-  setValue: UseFormSetValue<z.infer<typeof addEntryFormSchema>>;
-};
-
-const CategorySelect = ({ setValue }: CategorySelectProps) => {
+const CategorySelect = () => {
   const [popoverOpened, setPopoverOpened] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [popoverWidth, setPopoverWidth] = useState<number>(0);
+
+  const form = useFormContext<z.infer<typeof addEntryFormSchema>>();
 
   const handleOpenChange = (opened: boolean) => {
     setPopoverOpened(opened);

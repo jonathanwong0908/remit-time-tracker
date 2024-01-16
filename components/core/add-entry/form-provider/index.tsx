@@ -2,6 +2,7 @@ import React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "@/components/ui/form";
 
 export const addEntryFormSchema = z.object({
   description: z.string().optional(),
@@ -15,17 +16,33 @@ export const addEntryFormSchema = z.object({
 
 type AddEntryFormProviderProps = {
   children: React.ReactNode;
+  className?: string;
 };
 
-const AddEntryFormProvider = ({ children }: AddEntryFormProviderProps) => {
+const AddEntryFormProvider = ({
+  children,
+  className,
+}: AddEntryFormProviderProps) => {
   const form = useForm<z.infer<typeof addEntryFormSchema>>({
     resolver: zodResolver(addEntryFormSchema),
     defaultValues: {
-      // Your default values...
+      date: new Date(),
     },
   });
 
-  return <FormProvider {...form}>{children}</FormProvider>;
+  const onSubmit = (data: z.infer<typeof addEntryFormSchema>) => {
+    console.log(data);
+  };
+
+  return (
+    <FormProvider {...form}>
+      <Form {...form}>
+        <form onSubmit={form?.handleSubmit(onSubmit)} className={className}>
+          {children}
+        </form>
+      </Form>
+    </FormProvider>
+  );
 };
 
 export default AddEntryFormProvider;

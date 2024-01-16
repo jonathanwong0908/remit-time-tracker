@@ -1,22 +1,44 @@
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { Clock3 } from "lucide-react";
 import React from "react";
+import { useFormContext } from "react-hook-form";
+import * as z from "zod";
+import { addEntryFormSchema } from "../form-provider";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { AmPmToggle } from ".";
 
 const EndTimeInput = () => {
-  const [isAM, setIsAm] = React.useState(true);
+  const form = useFormContext<z.infer<typeof addEntryFormSchema>>();
 
   return (
-    <div className="flex items-center justify-between rounded border px-2 py-2">
-      <span className="pr-1.5 ">
-        <Clock3 size={14} className="text-muted" />
-      </span>
-      <Input className="w-full min-w-0 border-none p-0 shadow-none" />
-      <div className="flex gap-1 pl-1.5 text-xs text-muted">
-        <span className={cn("", isAM && "text-display")}>AM</span>
-        <span className={cn("")}>PM</span>
-      </div>
-    </div>
+    <FormField
+      control={form?.control}
+      name="endTime"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>End</FormLabel>
+          <FormControl>
+            <div className="flex items-center justify-between rounded border px-2 py-2">
+              <span className="pr-1.5 ">
+                <Clock3 size={14} className="text-muted" />
+              </span>
+              <Input
+                className="w-full min-w-0 border-none p-0 shadow-none"
+                {...field}
+              />
+              <AmPmToggle date={new Date()} />
+            </div>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
 
