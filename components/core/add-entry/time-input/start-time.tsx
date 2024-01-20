@@ -11,72 +11,78 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { AmPmToggle } from ".";
 import { cn } from "@/lib/utils";
 import { getHours } from "date-fns";
+import { useAddEntryFormContext } from "@/context/AddEntryContext";
 
 const StartTimeInput = () => {
-  const form = useFormContext<z.infer<typeof addEntryFormSchema>>();
-
+  const form = useAddEntryFormContext();
   const [amPm, setAmPm] = useState<"am" | "pm">(
     getHours(new Date()) < 12 ? "am" : "pm",
   );
 
-  let previousValue = ""; // Keep track of the previous value
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let currentValue = event.target.value;
+    const previousValue = form?.getValues("startTime") || "";
 
-    // If the user tries to input more than 5 characters, keep the previous value
-    if (currentValue.length > 5) {
-      currentValue = previousValue;
-    } else {
-      // If the user backspaces at the third position, remove the last two characters
-      if (currentValue.length === 2 && previousValue.length === 3) {
-        currentValue = currentValue.slice(0, 1);
-      } else {
-        // Remove non-numeric characters (except for the colon)
-        currentValue = currentValue.replace(/[^0-9:]/g, "");
+    // Remove non-numeric characters
+    currentValue = currentValue.replace(/[^0-9]/g, "");
 
-        // Convert 24-hour format to 12-hour format
-        if (currentValue.length >= 2) {
-          let hours = parseInt(currentValue.slice(0, 2));
-          hours = hours % 12;
-          hours = hours ? hours : 12; // the hour '0' should be '12'
-          currentValue =
-            hours.toString().padStart(2, "0") + currentValue.slice(2);
+    // Limit the input to 4 digits
+    if (currentValue.length > 4) {
+      currentValue = currentValue.slice(0, 4);
+    }
 
-          // Set amPm based on the hour
-          setAmPm(hours < 12 ? "am" : "pm");
-        }
-
-        // Add colon after two digits or if a third digit is being entered
-        if (
-          (currentValue.length === 2 && currentValue.indexOf(":") === -1) ||
-          (currentValue.length === 3 && previousValue.length === 2)
-        ) {
-          currentValue = currentValue.slice(0, 2) + ":" + currentValue.slice(2);
-        }
-
-        // Limit the fourth digit to 5
-        if (currentValue.length === 4) {
-          const fourthDigit = parseInt(currentValue[3]);
-          if (fourthDigit >= 6) {
-            currentValue = currentValue.slice(0, 3) + "5";
-          }
-        }
-
-        // Limit the second part to 59
-        if (currentValue.length > 4) {
-          const minutes = parseInt(currentValue.slice(3));
-          if (minutes > 59) {
-            currentValue = currentValue.slice(0, 3) + "59";
-          }
-        }
+    // Prevent the user from inputting anything larger than 2 on the first digit
+    if (currentValue.length >= 1) {
+      const firstDigit = parseInt(currentValue[0]);
+      if (firstDigit > 2) {
+        currentValue = "";
       }
     }
 
-    previousValue = currentValue; // Update the previous value
+    // Prevent the user from inputting 24 or above
+    if (currentValue.length >= 2) {
+      const hours = parseInt(currentValue.slice(0, 2));
+      if (hours > 24) {
+        currentValue = currentValue.slice(0, 1);
+      } else if (hours === 24 && currentValue.length > 2) {
+        // If the hours are exactly 24, don't allow any more input
+        currentValue = currentValue.slice(0, 2);
+      }
+    }
+
+    // Limit the fourth digit to 5
+    if (currentValue.length === 4) {
+      const fourthDigit = parseInt(currentValue[3]);
+      if (fourthDigit >= 6) {
+        currentValue = currentValue.slice(0, 3) + "5";
+      }
+    }
+
+    // Convert 24-hour format to 12-hour format and set AM/PM
+    if (currentValue.length >= 2) {
+      let hours = parseInt(currentValue.slice(0, 2));
+
+      // Set amPm based on the original hour, but only if the hours are being entered and the input is increasing in length
+      if (
+        currentValue.length <= 2 &&
+        currentValue.length > previousValue.length
+      ) {
+        setAmPm(hours < 12 || hours === 24 ? "am" : "pm");
+      }
+
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      currentValue =
+        hours.toString().padStart(2, "0") + currentValue.slice(2, 4);
+    }
+
+    // Add colon after two digits
+    if (currentValue.length > 2) {
+      currentValue = currentValue.slice(0, 2) + ":" + currentValue.slice(2);
+    }
+
     form?.setValue("startTime", currentValue);
   };
 
@@ -103,7 +109,7 @@ const StartTimeInput = () => {
               <div className="flex gap-1 pl-2 text-xs text-muted">
                 <span
                   className={cn(
-                    "cursor-pointer",
+                    "cursor-pointer transition",
                     amPm === "am" && "cursor-default border-b text-display",
                   )}
                   onClick={() => setAmPm("am")}
@@ -112,7 +118,7 @@ const StartTimeInput = () => {
                 </span>
                 <span
                   className={cn(
-                    "cursor-pointer",
+                    "cursor-pointer transition",
                     amPm === "pm" && "cursor-default border-b text-display",
                   )}
                   onClick={() => setAmPm("pm")}
