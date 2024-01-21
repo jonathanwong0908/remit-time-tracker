@@ -7,10 +7,12 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { MutationStatus } from "@tanstack/react-query";
 import { Form } from "@/components/ui/form";
 import {
+  add,
   addHours,
   differenceInHours,
   differenceInMinutes,
   format,
+  isBefore,
   parse,
 } from "date-fns";
 
@@ -60,15 +62,16 @@ const AddEntryFormProvider = ({
     const endTimeString = form?.getValues("endTime");
 
     if (startTimeString && endTimeString) {
-      const startTime = parse(startTimeString, "HH:mm", new Date());
-      const endTime = parse(endTimeString, "HH:mm", new Date());
+      let startTime = parse(startTimeString, "HH:mm", new Date());
+      let endTime = parse(endTimeString, "HH:mm", new Date());
+
+      // If the end time is earlier than the start time, add 24 hours to the end time
+      if (isBefore(endTime, startTime)) {
+        endTime = add(endTime, { hours: 24 });
+      }
 
       let hoursDifference = differenceInHours(endTime, startTime);
       let minutesDifference = differenceInMinutes(endTime, startTime) % 60;
-
-      if (hoursDifference < 0) {
-        hoursDifference = hoursDifference + 24;
-      }
 
       const timeSpent = `${hoursDifference < 10 ? "0" : ""}${hoursDifference}:${
         minutesDifference < 10 ? "0" : ""

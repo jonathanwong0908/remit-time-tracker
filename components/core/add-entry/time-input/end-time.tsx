@@ -40,17 +40,17 @@ const EndTimeInput = () => {
       }
     }
 
-    // Limit the fourth digit to 5
-    if (currentValue.length === 4) {
-      const fourthDigit = parseInt(currentValue[3]);
-      if (fourthDigit >= 6) {
-        currentValue = currentValue.slice(0, 3) + "5";
-      }
-    }
-
     // Add colon after two digits
     if (currentValue.length > 2) {
       currentValue = currentValue.slice(0, 2) + ":" + currentValue.slice(2);
+    }
+
+    // Prevent the third number from being larger than 5
+    if (currentValue.length === 4) {
+      const thirdNumber = parseInt(currentValue[3]);
+      if (thirdNumber > 5) {
+        currentValue = currentValue.slice(0, 3) + "5";
+      }
     }
 
     form?.setValue("endTime", currentValue);

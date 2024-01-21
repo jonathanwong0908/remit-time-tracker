@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useAddEntryFormContext } from "@/context/AddEntryContext";
+import { add, format, parse } from "date-fns";
 
 const StartTimeInput = () => {
   const form = useAddEntryFormContext();
@@ -40,17 +41,17 @@ const StartTimeInput = () => {
       }
     }
 
-    // Limit the fourth digit to 5
-    if (currentValue.length === 4) {
-      const fourthDigit = parseInt(currentValue[3]);
-      if (fourthDigit >= 6) {
-        currentValue = currentValue.slice(0, 3) + "5";
-      }
-    }
-
     // Add colon after two digits
     if (currentValue.length > 2) {
       currentValue = currentValue.slice(0, 2) + ":" + currentValue.slice(2);
+    }
+
+    // Prevent the third number from being larger than 5
+    if (currentValue.length === 4) {
+      const thirdNumber = parseInt(currentValue[3]);
+      if (thirdNumber > 5) {
+        currentValue = currentValue.slice(0, 3) + "5";
+      }
     }
 
     form?.setValue("startTime", currentValue);
@@ -58,6 +59,34 @@ const StartTimeInput = () => {
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     let currentValue = event.target.value;
+
+    if (currentValue?.length === 0) {
+      const endTimeString = form?.getValues("endTime");
+      const timeSpentString = form?.getValues("timeSpent");
+
+      if (endTimeString && timeSpentString) {
+        // Parse the end time and time spent
+        const endTime = parse(endTimeString, "HH:mm", new Date());
+        const timeSpent = timeSpentString.split(":").map(Number);
+
+        // Subtract the time spent from the end time to get the start time
+        const startTime = add(endTime, {
+          hours: -timeSpent[0],
+          minutes: -timeSpent[1],
+        });
+
+        // Format the start time as a string and set it in the form
+        const startTimeString = format(startTime, "HH:mm");
+        form?.setValue("startTime", startTimeString);
+
+        return;
+      }
+    }
+
+    // If the user has only entered one digit, add "0" in front and ":00" at the back
+    if (currentValue.length === 1) {
+      currentValue = "0" + currentValue + ":00";
+    }
 
     // If the user has only entered the hour part, add ":00" to the end
     if (currentValue.length === 2) {

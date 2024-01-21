@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/form";
 import { useAddEntryFormContext } from "@/context/AddEntryContext";
 import { addHours, addMinutes, format, parse } from "date-fns";
+import { Timer } from "lucide-react";
 
 const TimeSpentInput = () => {
   const form = useAddEntryFormContext();
@@ -110,13 +111,18 @@ const TimeSpentInput = () => {
         <FormItem>
           <FormLabel>Time Spent</FormLabel>
           <FormControl>
-            <Input
-              placeholder="HH:MM"
-              className="px-3 py-2 shadow-none"
-              {...field}
-              onChange={handleInputChange}
-              onBlur={handleBlur}
-            />
+            <div className="flex items-center justify-between rounded border px-3 py-2">
+              <Input
+                placeholder="HH:MM"
+                className="w-full min-w-0 border-none p-0 shadow-none"
+                {...field}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+              />
+              <span className="">
+                <Timer size={14} className="text-muted" />
+              </span>
+            </div>
           </FormControl>
           <FormMessage />
         </FormItem>
