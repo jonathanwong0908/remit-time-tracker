@@ -1,9 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Clock3 } from "lucide-react";
-import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import * as z from "zod";
-import { addEntryFormSchema } from "../form-provider";
+import React from "react";
 import {
   FormControl,
   FormField,
@@ -11,19 +8,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
-import { getHours } from "date-fns";
 import { useAddEntryFormContext } from "@/context/AddEntryContext";
 
 const StartTimeInput = () => {
   const form = useAddEntryFormContext();
-  const [amPm, setAmPm] = useState<"am" | "pm">(
-    getHours(new Date()) < 12 ? "am" : "pm",
-  );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let currentValue = event.target.value;
-    const previousValue = form?.getValues("startTime") || "";
 
     // Remove non-numeric characters
     currentValue = currentValue.replace(/[^0-9]/g, "");
@@ -44,11 +35,8 @@ const StartTimeInput = () => {
     // Prevent the user from inputting 24 or above
     if (currentValue.length >= 2) {
       const hours = parseInt(currentValue.slice(0, 2));
-      if (hours > 24) {
+      if (hours > 23) {
         currentValue = currentValue.slice(0, 1);
-      } else if (hours === 24 && currentValue.length > 2) {
-        // If the hours are exactly 24, don't allow any more input
-        currentValue = currentValue.slice(0, 2);
       }
     }
 
@@ -60,24 +48,6 @@ const StartTimeInput = () => {
       }
     }
 
-    // Convert 24-hour format to 12-hour format and set AM/PM
-    if (currentValue.length >= 2) {
-      let hours = parseInt(currentValue.slice(0, 2));
-
-      // Set amPm based on the original hour, but only if the hours are being entered and the input is increasing in length
-      if (
-        currentValue.length <= 2 &&
-        currentValue.length > previousValue.length
-      ) {
-        setAmPm(hours < 12 || hours === 24 ? "am" : "pm");
-      }
-
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-      currentValue =
-        hours.toString().padStart(2, "0") + currentValue.slice(2, 4);
-    }
-
     // Add colon after two digits
     if (currentValue.length > 2) {
       currentValue = currentValue.slice(0, 2) + ":" + currentValue.slice(2);
@@ -86,46 +56,44 @@ const StartTimeInput = () => {
     form?.setValue("startTime", currentValue);
   };
 
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    let currentValue = event.target.value;
+
+    // If the user has only entered the hour part, add ":00" to the end
+    if (currentValue.length === 2) {
+      currentValue = currentValue + ":00";
+    }
+
+    // If the user has entered the hour and part of the minute, add the missing digit
+    else if (currentValue.length === 4) {
+      currentValue = currentValue + "0";
+    }
+
+    form?.setValue("startTime", currentValue);
+    form?.updateTimeSpent();
+  };
+
   return (
     <FormField
       control={form?.control}
       name="startTime"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Start</FormLabel>
+          <FormLabel>Start time</FormLabel>
           <FormControl>
-            <div className="flex items-center justify-between rounded border px-2 py-2">
-              <span className="pr-2 ">
-                <Clock3 size={14} className="text-muted" />
-              </span>
+            <div className="flex items-center justify-between rounded border px-3 py-2">
               <Input
                 type="text"
                 placeholder="HH:MM"
                 className="w-full min-w-0 border-none p-0 shadow-none"
                 {...field}
-                value={field?.value || ""}
+                value={field?.value}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
               />
-              <div className="flex gap-1 pl-2 text-xs text-muted">
-                <span
-                  className={cn(
-                    "cursor-pointer transition",
-                    amPm === "am" && "cursor-default border-b text-display",
-                  )}
-                  onClick={() => setAmPm("am")}
-                >
-                  AM
-                </span>
-                <span
-                  className={cn(
-                    "cursor-pointer transition",
-                    amPm === "pm" && "cursor-default border-b text-display",
-                  )}
-                  onClick={() => setAmPm("pm")}
-                >
-                  PM
-                </span>
-              </div>
+              <span className="">
+                <Clock3 size={14} className="text-muted" />
+              </span>
             </div>
           </FormControl>
           <FormMessage />
