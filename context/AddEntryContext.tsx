@@ -14,6 +14,7 @@ import {
   format,
   isBefore,
   parse,
+  startOfToday,
 } from "date-fns";
 
 type AddEntryFormProviderProps = {
@@ -32,7 +33,7 @@ const AddEntryFormContext = createContext<AddEntryFormContextType | null>(null);
 export const addEntryFormSchema = z.object({
   description: z.string().optional(),
   category: z.string(),
-  subCategory: z.string(),
+  subCategory: z.string().optional(),
   date: z.date(),
   startTime: z.string(),
   endTime: z.string(),
@@ -46,7 +47,7 @@ const AddEntryFormProvider = ({
   const form = useForm<z.infer<typeof addEntryFormSchema>>({
     resolver: zodResolver(addEntryFormSchema),
     defaultValues: {
-      date: new Date(),
+      date: startOfToday(),
       startTime: format(new Date(), "HH:MM"),
       endTime: format(addHours(new Date(), 1), "HH:MM"),
       timeSpent: "01:00",

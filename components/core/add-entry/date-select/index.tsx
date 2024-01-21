@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import AddEntryCalendar from "../calendar";
-import { UseFormSetValue, UseFormWatch, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import * as z from "zod";
 import { addEntryFormSchema } from "../form-provider";
+import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 
 const DateSelect = () => {
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -81,7 +82,7 @@ const DateSelect = () => {
           onClick={() => setPopoverOpened(!popoverOpened)}
           className="flex w-full items-center justify-between px-3 py-2 transition hover:bg-surface-container-high"
         >
-          <span className="text-sm text-muted">Select start date</span>
+          <span className="text-sm">{formatDate(form?.watch("date"))}</span>
           <span>
             <CalendarDays size={14} className="text-muted" />
           </span>
@@ -101,3 +102,18 @@ const DateSelect = () => {
 };
 
 export default DateSelect;
+
+const formatDate = (date: Date) => {
+  let displayDate;
+  if (isToday(date)) {
+    displayDate = `Today, ${format(date, "dd MMM, yyyy (EEE)")}`;
+  } else if (isYesterday(date)) {
+    displayDate = `Yesterday, ${format(date, "dd MMM, yyyy (EEE)")}`;
+  } else if (isTomorrow(date)) {
+    displayDate = `Tomorrow, ${format(date, "dd MMM, yyyy (EEE)")}`;
+  } else {
+    displayDate = format(date, "dd MMM, yyyy (EEE)");
+  }
+
+  return displayDate;
+};

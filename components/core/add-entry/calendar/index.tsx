@@ -17,17 +17,17 @@ import {
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { useFormContext } from "react-hook-form";
-import * as z from "zod";
-import { addEntryFormSchema } from "../form-provider";
+import { useAddEntryFormContext } from "@/context/AddEntryContext";
 
 const AddEntryCalendar = () => {
-  const today = startOfToday();
-  const [selectedDay, setSelectedDay] = useState(today);
-  const [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
+  const form = useAddEntryFormContext();
+  const [selectedDay, setSelectedDay] = useState(
+    form?.watch("date") || startOfToday(),
+  );
+  const [currentMonth, setCurrentMonth] = useState(
+    format(selectedDay, "MMM-yyyy"),
+  );
   const firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
-
-  const form = useFormContext<z.infer<typeof addEntryFormSchema>>();
 
   let days = eachDayOfInterval({
     start: firstDayCurrentMonth,
@@ -48,7 +48,7 @@ const AddEntryCalendar = () => {
     form?.setValue("date", day);
     setSelectedDay(day);
   };
-
+  console.log(form?.watch("date"));
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -113,12 +113,7 @@ const AddEntryCalendar = () => {
                     !isToday(day) &&
                     !isSameMonth(day, firstDayCurrentMonth) &&
                     "",
-                  isEqual(day, selectedDay) &&
-                    isToday(day) &&
-                    "bg-surface-container-highest",
-                  isEqual(day, selectedDay) &&
-                    !isToday(day) &&
-                    "bg-surface-container-highest",
+                  isEqual(day, selectedDay) && "bg-surface-container-highest",
                   !isEqual(day, selectedDay) &&
                     "hover:bg-surface-container-higher",
                   (isEqual(day, selectedDay) || isToday(day)) &&

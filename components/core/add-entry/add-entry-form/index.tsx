@@ -28,7 +28,7 @@ const AddEntryForm = () => {
             name="date"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date</FormLabel>
+                <FormLabel>Start date</FormLabel>
                 <FormControl>
                   <DateSelect />
                 </FormControl>
