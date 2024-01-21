@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useAddEntryFormContext } from "@/context/AddEntryContext";
+import { add, format, parse } from "date-fns";
 
 const EndTimeInput = () => {
   const form = useAddEntryFormContext();
@@ -58,6 +59,35 @@ const EndTimeInput = () => {
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     let currentValue = event.target.value;
+
+    if (currentValue?.length === 0) {
+      const startTimeString = form?.getValues("startTime");
+      const timeSpentString = form?.getValues("timeSpent");
+
+      if (startTimeString && timeSpentString) {
+        // Parse the start time and time spent
+        const startTime = parse(startTimeString, "HH:mm", new Date());
+        const timeSpent = timeSpentString.split(":").map(Number);
+
+        // Add the time spent to the start time to get the end time
+        const endTime = add(startTime, {
+          hours: timeSpent[0],
+          minutes: timeSpent[1],
+        });
+
+        // Format the end time as a string and set it in the form
+        const endTimeString = format(endTime, "HH:mm");
+        form?.setValue("endTime", endTimeString);
+      }
+
+      form?.updateTimeSpent();
+      return;
+    }
+
+    // If the user has only entered one digit, add "0" in front and ":00" at the back
+    if (currentValue.length === 1) {
+      currentValue = "0" + currentValue + ":00";
+    }
 
     // If the user has only entered the hour part, add ":00" to the end
     if (currentValue.length === 2) {
