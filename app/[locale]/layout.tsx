@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import "../../styles/globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/core/theme-provider";
-import Navbar from "@/components/core/navbar";
 import SideNav from "@/components/core/side-nav";
-import { inter, poppins } from "@/lib/fonts";
+import { poppins } from "@/lib/fonts";
 import { NextIntlClientProvider, useMessages } from "next-intl";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,30 +26,32 @@ export default function RootLayout({
   const messages = useMessages();
 
   return (
-    <html
-      lang={locale}
-      suppressHydrationWarning
-      className={cn(poppins.className)}
-    >
-      <body
-        className={cn(
-          "font-body relative overflow-x-clip bg-surface-container font-light transition-colors duration-300",
-        )}
+    <ClerkProvider>
+      <html
+        lang={locale}
+        suppressHydrationWarning
+        className={cn(poppins.className)}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          themes={["light", "dark"]}
+        <body
+          className={cn(
+            "font-body relative overflow-x-clip bg-surface-container font-light transition-colors duration-300",
+          )}
         >
-          <NextIntlClientProvider messages={messages}>
-            <div className="relative flex min-h-screen">
-              <SideNav />
-              <div className="p-6">{children}</div>
-            </div>
-          </NextIntlClientProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            themes={["light", "dark"]}
+          >
+            <NextIntlClientProvider messages={messages}>
+              <div className="relative flex min-h-screen">
+                <SideNav />
+                <div className="p-6">{children}</div>
+              </div>
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

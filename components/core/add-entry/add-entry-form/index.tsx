@@ -1,3 +1,5 @@
+"use client";
+
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 import {
@@ -43,24 +45,6 @@ const AddEntryForm = () => {
         <div className="space-y-8">
           <FormField
             control={form?.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="What did you do? (optional)"
-                    className="h-24 resize-none text-sm font-normal shadow-none"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form?.control}
             name="category"
             render={({ field }) => (
               <FormItem>
@@ -81,6 +65,24 @@ const AddEntryForm = () => {
                 <FormLabel>Sub-category</FormLabel>
                 <FormControl>
                   <SubCategorySelect />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form?.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="What did you do? (optional)"
+                    className="h-24 resize-none text-sm font-normal shadow-none"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

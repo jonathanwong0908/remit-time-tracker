@@ -1,6 +1,7 @@
 import { LocaleString } from "@/config/locale";
 import { useTranslations } from "next-intl";
 import React from "react";
+import AddRecordForm from "./(components)/add-record-form";
 
 type HomePageProps = {
   params: {
@@ -13,7 +14,7 @@ export default function Home({ params: { locale } }: HomePageProps) {
 
   return (
     <main className="grid place-items-center">
-      <h1>{t("title")}</h1>
+      <AddRecordForm />
     </main>
   );
 }
